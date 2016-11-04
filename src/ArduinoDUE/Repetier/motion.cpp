@@ -516,7 +516,7 @@ void PrintLine::calculateMove(float axisDistanceMM[], uint8_t pathOptimize,fast8
     // slowest time to accelerate from v0 to limitInterval determines used acceleration
     // t = (v_end-v_start)/a
     float slowestAxisPlateauTimeRepro = 1e15; // 1/time to reduce division Unit: 1/s
-    uint32_t *accel = (isEPositiveMove() ?  Printer::maxPrintAccelerationStepsPerSquareSecond : Printer::maxTravelAccelerationStepsPerSquareSecond);
+    uint32_t *accel = (uint32_t*)(isEPositiveMove() ?  Printer::maxPrintAccelerationStepsPerSquareSecond : Printer::maxTravelAccelerationStepsPerSquareSecond);
 #if defined(INTERPOLATE_ACCELERATION_WITH_Z) && INTERPOLATE_ACCELERATION_WITH_Z != 0
     uint32_t newAccel[4];
     float accelFac = (100.0 + (EEPROM::accelarationFactorTop() - 100.0) * Printer::currentPosition[Z_AXIS] / Printer::zLength)*0.01;

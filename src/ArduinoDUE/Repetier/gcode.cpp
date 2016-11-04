@@ -377,7 +377,7 @@ void GCode::readFromSerial()
     millis_t time = HAL::timeInMilliseconds();
     if(!HAL::serialByteAvailable())
     {
-        if((waitingForResend >= 0 || commandsReceivingWritePosition > 0) && time - timeOfLastDataPacket > 200)
+        if((waitingForResend >= 0 || commandsReceivingWritePosition > 0) && time - timeOfLastDataPacket > 2000)
         {
             // Com::printF(PSTR("WFR:"),waitingForResend);Com::printF(PSTR(" CRWP:"),commandsReceivingWritePosition);commandReceiving[commandsReceivingWritePosition] = 0;Com::printFLN(PSTR(" GOT:"),(char*)commandReceiving);
             requestResend(); // Something is wrong, a started line was not continued in the last second

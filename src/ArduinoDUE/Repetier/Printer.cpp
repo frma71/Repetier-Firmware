@@ -759,6 +759,7 @@ uint8_t Printer::setDestinationStepsFromGCode(GCode *com)
     return !com->hasNoXYZ() || (com->hasE() && destinationSteps[E_AXIS] != currentPositionSteps[E_AXIS]); // ignore unproductive moves
 }
 
+int kalle = 0;
 void Printer::setup()
 {
     HAL::stopWatchdog();
@@ -829,6 +830,7 @@ void Printer::setup()
     SET_OUTPUT(X_STEP_PIN);
     SET_OUTPUT(Y_STEP_PIN);
     SET_OUTPUT(Z_STEP_PIN);
+
 	endXYZSteps();
     //Initialize Dir Pins
 #if X_DIR_PIN > -1

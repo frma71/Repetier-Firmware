@@ -22,6 +22,8 @@
 #ifndef COMMUNICATION_H
 #define COMMUNICATION_H
 
+#define int32_t long
+
 class Com
 {
     public:

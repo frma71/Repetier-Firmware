@@ -1251,7 +1251,7 @@ void Commands::processGCode(GCode *com) {
                                 // The correct Rod Radius would put us here at z==0 and B height is
                                 // square root (rod length squared minus rod radius squared)
                                 // Reverse that to get calculated Rod Radius given B height
-                                h -= RMath::sqr(bSteps);
+                                h -= RMath::sqr((uint32_t)bSteps);
                                 h = SQRT(h);
                                 EEPROM::setRodRadius(h*Printer::invAxisStepsPerMM[Z_AXIS]);
                             }
@@ -2365,6 +2365,11 @@ void Commands::processMCode(GCode *com) {
 		}
 break;
 #endif
+    case 998: {
+      extern void dumpDebug(void);
+      dumpDebug();
+      break;
+    }
 		case 999: // Stop fatal error take down
 			if(com->hasS())
 				GCode::fatalError(PSTR("Testing fatal error"));

@@ -36,13 +36,12 @@
 #include <inttypes.h>
 #include "pins.h"
 #include "Print.h"
-#include "fastio.h"
+//#include "fastio.h"
 
 // Hack to make 84 MHz Due clock work without changes to pre-existing code
 // which would otherwise have problems with int overflow.
-#undef F_CPU
-#define F_CPU       21000000        // should be factor of F_CPU_TRUE
-#define F_CPU_TRUE  84000000        // actual CPU clock frequency
+//#undef F_CPU
+#define F_CPU_TRUE  80000000        // actual CPU clock frequency
 #define EEPROM_BYTES 4096  // bytes of eeprom we simulate
 #define SUPPORT_64_BIT_MATH  // Gives better results with high resultion deltas
 
@@ -57,7 +56,8 @@
 // Some structures assume no padding, need to add this attribute on ARM
 #define PACK    __attribute__ ((packed))
 
-#define INLINE __attribute__((always_inline))
+//#define INLINE __attribute__((always_inline))
+#define INLINE
 
 // do not use program space memory with Due
 #define PROGMEM
@@ -72,49 +72,49 @@ typedef char prog_char;
 #undef pgm_read_float
 #define pgm_read_float(addr) (*(const float *)(addr))
 #undef pgm_read_word
-//#define pgm_read_word(addr) (*(const unsigned int *)(addr))
+#define pgm_read_word(addr) (*(const unsigned int *)(addr))
 #define pgm_read_word(addr) (*(addr))
 #undef pgm_read_word_near
 #define pgm_read_word_near(addr) pgm_read_word(addr)
 #undef pgm_read_dword
 #define pgm_read_dword(addr) (*(addr))
-//#define pgm_read_dword(addr) (*(const unsigned long *)(addr))
+#define pgm_read_dword(addr) (*(const unsigned long *)(addr))
 #undef pgm_read_dword_near
 #define pgm_read_dword_near(addr) pgm_read_dword(addr)
 #define _BV(x) (1 << (x))
 
-#define FSTRINGVALUE(var,value) const char var[] PROGMEM = value;
-#define FSTRINGVAR(var) static const char var[] PROGMEM;
+#define FSTRINGVALUE(var,value) PROGMEM const char var[]  = value;
+#define FSTRINGVAR(var) static PROGMEM const char var[] ;
 #define FSTRINGPARAM(var) PGM_P var
 
 
 #define EXTRUDER_TIMER          TC0
 #define EXTRUDER_TIMER_CHANNEL  0
 #define EXTRUDER_TIMER_IRQ      ID_TC0
-#define EXTRUDER_TIMER_VECTOR   TC0_Handler
+//#define EXTRUDER_TIMER_VECTOR   TC0_Handler
 #define PWM_TIMER               TC0
 #define PWM_TIMER_CHANNEL       1
 #define PWM_TIMER_IRQ           ID_TC1
-#define PWM_TIMER_VECTOR        TC1_Handler
+//#define PWM_TIMER_VECTOR        TC1_Handler
 #define TIMER1_TIMER            TC2
 #define TIMER1_TIMER_CHANNEL    2
 #define TIMER1_TIMER_IRQ        ID_TC8
-#define TIMER1_COMPA_VECTOR     TC8_Handler
+//#define TIMER1_COMPA_VECTOR     TC8_Handler
 #define SERVO_TIMER             TC2
 #define SERVO_TIMER_CHANNEL     0
 #define SERVO_TIMER_IRQ         ID_TC6
-#define SERVO_COMPA_VECTOR      TC6_Handler
+//#define SERVO_COMPA_VECTOR      TC6_Handler
 #define BEEPER_TIMER            TC1
 #define BEEPER_TIMER_CHANNEL    0
 #define BEEPER_TIMER_IRQ        ID_TC3
-#define BEEPER_TIMER_VECTOR     TC3_Handler
+//#define BEEPER_TIMER_VECTOR     TC3_Handler
 #define DELAY_TIMER             TC1
 #define DELAY_TIMER_CHANNEL     1
 #define DELAY_TIMER_IRQ         ID_TC4  // IRQ not really used, needed for pmc id
 #define DELAY_TIMER_CLOCK       TC_CMR_TCCLKS_TIMER_CLOCK2
 #define DELAY_TIMER_PRESCALE    8
 
-//#define SERIAL_BUFFER_SIZE      1024
+#define SERIAL_BUFFER_SIZE      1024
 //#define SERIAL_PORT             UART
 //#define SERIAL_IRQ              ID_UART
 //#define SERIAL_PORT_VECTOR      UART_Handler
@@ -131,9 +131,8 @@ typedef char prog_char;
 
 
 #define SERVO_CLOCK_FREQ        1000
-#define SERVO_PRESCALE          2      // Using TCLOCK1 therefore 2
-#define SERVO2500US             (((F_CPU_TRUE / SERVO_PRESCALE) / 1000000) * 2500)
-#define SERVO5000US             (((F_CPU_TRUE / SERVO_PRESCALE) / 1000000) * 5000)
+#define SERVO2500US             (F_CPU_TRUE/1000000*2500)
+#define SERVO5000US             (F_CPU_TRUE/1000000*5000)
 
 #define AD_PRESCALE_FACTOR      84  // 500 kHz ADC clock 
 #define AD_TRACKING_CYCLES      4   // 0 - 15     + 1 adc clock cycles
@@ -156,25 +155,46 @@ typedef char prog_char;
 #define COMPAT_PRE1
 #endif
 
+
+
+#if 0
 //#define	READ(pin)  PIO_Get(g_APinDescription[pin].pPort, PIO_INPUT, g_APinDescription[pin].ulPin)
 #define READ_VAR(pin) (g_APinDescription[pin].pPort->PIO_PDSR & g_APinDescription[pin].ulPin ? 1 : 0) // does return 0 or pin value
 #define _READ(pin) (DIO ##  pin ## _PORT->PIO_PDSR & DIO ##  pin ## _PIN ? 1 : 0) // does return 0 or pin value
+#else
+#define READ_VAR(pin) 0
+#define _READ(pin) digitalRead(pin)
+#endif
 #define READ(pin) _READ(pin)
 //#define	WRITE_VAR(pin, v) PIO_SetOutput(g_APinDescription[pin].pPort, g_APinDescription[pin].ulPin, v, 0, PIO_PULLUP)
+#if 0
 #define	WRITE_VAR(pin, v) do{if(v) {g_APinDescription[pin].pPort->PIO_SODR = g_APinDescription[pin].ulPin;} else {g_APinDescription[pin].pPort->PIO_CODR = g_APinDescription[pin].ulPin; }}while(0)
 #define		_WRITE(port, v)			do { if (v) {DIO ##  port ## _PORT -> PIO_SODR = DIO ## port ## _PIN; } else {DIO ##  port ## _PORT->PIO_CODR = DIO ## port ## _PIN; }; } while (0)
+#else
+#define WRITE_VAR(pin, v)
+extern void myDigitalWrite(int pin, int val);
+#define _WRITE(pin, val) myDigitalWrite(pin, val)
+#endif
 #define WRITE(pin,v) _WRITE(pin,v)
 
+#if 0
 #define	SET_INPUT(pin) pmc_enable_periph_clk(g_APinDescription[pin].ulPeripheralId); \
   PIO_Configure(g_APinDescription[pin].pPort, PIO_INPUT, g_APinDescription[pin].ulPin, 0)
 #define	SET_OUTPUT(pin) PIO_Configure(g_APinDescription[pin].pPort, PIO_OUTPUT_1, \
                                       g_APinDescription[pin].ulPin, g_APinDescription[pin].ulPinConfiguration)
+#else
+#define SET_INPUT(pin) pinMode(pin, INPUT)
+#define SET_OUTPUT(pin) pinMode(pin, OUTPUT)
+#endif                                      
 #define TOGGLE(pin) WRITE(pin,!READ(pin))
 #define TOGGLE_VAR(pin) HAL::digitalWrite(pin,!HAL::digitalRead(pin))
 #undef LOW
 #define LOW         0
 #undef HIGH
 #define HIGH        1
+
+inline void __disable_irq() {}
+inline void __enable_irq() {}
 
 // Protects a variable scope for interrupts. Uses RAII to force clearance of
 // Interrupt block at the end resp. sets them to previous state.
@@ -335,6 +355,8 @@ class HAL
     // do any hardware-specific initialization here
     static inline void hwSetup(void)
     {
+#if 0
+
       #if !FEATURE_WATCHDOG
         // Disable watchdog
         WDT_Disable(WDT);
@@ -364,6 +386,7 @@ class HAL
       for (i = 0; i < EEPROM_BYTES; i += 4) {
         memcopy4(&virtualEeprom[i],&n);
       }
+#endif
 #endif
     }
 
@@ -412,6 +435,8 @@ class HAL
     }
     static INLINE void delayMicroseconds(uint32_t usec)
     { //usec += 3;
+#if 0
+
       uint32_t n = usec * (F_CPU_TRUE / 3000000);
       asm volatile(
         "L2_%=_delayMicroseconds:"       "\n\t"
@@ -419,6 +444,7 @@ class HAL
         "bge    L2_%=_delayMicroseconds" "\n"
         : "+r" (n) :
       );
+  #endif
     }
     static inline void delayMilliseconds(unsigned int delayMs)
     {
@@ -433,6 +459,7 @@ class HAL
       }
     }
     static inline void tone(uint8_t pin, int frequency) {
+#if 0
       // set up timer counter 1 channel 0 to generate interrupts for
       // toggling output pin.
       SET_OUTPUT(pin);
@@ -450,10 +477,13 @@ class HAL
       BEEPER_TIMER->TC_CHANNEL[BEEPER_TIMER_CHANNEL].TC_IER = TC_IER_CPCS;
       BEEPER_TIMER->TC_CHANNEL[BEEPER_TIMER_CHANNEL].TC_IDR = ~TC_IER_CPCS;
       NVIC_EnableIRQ((IRQn_Type)BEEPER_TIMER_IRQ);
+#endif // 0      
     }
     static inline void noTone(uint8_t pin) {
+#if 0
       TC_Stop(TC1, 0);
       WRITE_VAR(pin, LOW);
+#endif
     }
 
     static inline void eprSetByte(unsigned int pos, uint8_t value)
@@ -522,6 +552,7 @@ class HAL
     // Write any data type to EEPROM
     static inline void eprBurnValue(unsigned int pos, int size, union eeval_t newvalue)
     {
+#if 0      
 #if EEPROM_AVAILABLE == EEPROM_SPI_ALLIGATOR
       uint8_t eeprom_temp[3];
 
@@ -583,6 +614,7 @@ class HAL
       i2cStop();          // signal end of transaction
       delayMilliseconds(EEPROM_PAGE_WRITE_TIME);   // wait for page write to complete
 #endif//(MOTHERBOARD==500) || (MOTHERBOARD==501)
+#endif
     }
 
     // Read any data type from EEPROM that was previously written by eprBurnValue
@@ -826,8 +858,10 @@ class HAL
 
     // Watchdog support
     inline static void startWatchdog() {
+#if 0
       WDT->WDT_MR = WDT_MR_WDRSTEN | WATCHDOG_INTERVAL | (WATCHDOG_INTERVAL << 16);
       WDT->WDT_CR = 0xA5000001;
+#endif      
     };
     inline static void stopWatchdog() {}
     inline static void pingWatchdog() {

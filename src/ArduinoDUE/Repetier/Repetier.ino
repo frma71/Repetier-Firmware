@@ -160,12 +160,15 @@ Custom M Codes
 
 void setup()
 {
-    Printer::setup();
+  Serial.begin(115200);
+  Serial.println("Setup");
+  Printer::setup();
 }
 
 void loop()
 {
-    Commands::commandLoop();
+  //Serial.println("Loop");
+  Commands::commandLoop();
 }
 
 

@@ -805,7 +805,7 @@ public:
     static INLINE void setDebugJam(uint8_t b)
     {
         flag2 = (b ? flag2 | PRINTER_FLAG2_DEBUG_JAM : flag2 & ~PRINTER_FLAG2_DEBUG_JAM);
-        Com::printFLN(PSTR("Jam debugging:"),b);
+        //Com::printFLN(PSTR("Jam debugging:"),b);
     }
 
     static INLINE uint8_t isJamcontrolDisabled()
@@ -816,7 +816,7 @@ public:
     static INLINE void setJamcontrolDisabled(uint8_t b)
     {
         flag2 = (b ? flag2 | PRINTER_FLAG2_JAMCONTROL_DISABLED : flag2 & ~PRINTER_FLAG2_JAMCONTROL_DISABLED);
-        Com::printFLN(PSTR("Jam control disabled:"),b);
+        //Com::printFLN(PSTR("Jam control disabled:"),b);
     }
 
     static INLINE void toggleAnimation()

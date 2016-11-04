@@ -246,7 +246,7 @@ STEPPER_CURRENT_CONTROL
 // 
 #if MOTHERBOARD == 403 || MOTHERBOARD == 404
 #ifndef __SAM3X8E__
-#error Oops!  Make sure you have 'Arduino Due' selected from the 'Tools -> Boards' menu.
+//#error Oops!  Make sure you have 'Arduino Due' selected from the 'Tools -> Boards' menu.
 #endif
 
 #define KNOWN_BOARD

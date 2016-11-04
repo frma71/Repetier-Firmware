@@ -61,7 +61,7 @@ To override EEPROM settings with config settings, set EEPROM_MODE 0
 // Alligator Board rev1         = 500
 // Alligator Board rev2         = 501
 
-#define MOTHERBOARD 402
+#define MOTHERBOARD 999
 
 #include "pins.h"
 
@@ -100,7 +100,7 @@ is a full cartesian system where x, y and z moves are handled by separate motors
 Cases 1, 2, 8 and 9 cover all needed xy and xz H gantry systems. If you get results mirrored etc. you can swap motor connections for x and y.
 If a motor turns in the wrong direction change INVERT_X_DIR or INVERT_Y_DIR.
 */
-#define DRIVE_SYSTEM 3
+#define DRIVE_SYSTEM 0
 
 /* You can write some GCODE to be executed on startup. Use this e.g. to set some 
 pins. Separate multiple GCODEs with \n
@@ -742,8 +742,8 @@ In any case, laser only enables while moving. At the end of a move it gets
 automatically disabled. 
 */
 
-#define SUPPORT_LASER 0 // set 1 to enable laser support
-#define LASER_PIN -1    // set to pin enabling laser
+#define SUPPORT_LASER 1 // set 1 to enable laser support
+#define LASER_PIN 14   // set to pin enabling laser
 #define LASER_ON_HIGH 1 // Set 0 if low signal enables laser
 
 // ##########################################################################################
@@ -757,10 +757,10 @@ setting rpm (only with event extension that supports this) and milling direction
 It also can add a delay to wait for spindle to run on full speed.
 */
 
-#define SUPPORT_CNC 0 // Set 1 for CNC support
+#define SUPPORT_CNC 1 // Set 1 for CNC support
 #define CNC_WAIT_ON_ENABLE 300 // wait x milliseconds after enabling
 #define CNC_WAIT_ON_DISABLE 0 // delay in milliseconds after disabling spindle. May be required for direction changes.
-#define CNC_ENABLE_PIN -1 // Pin to enable mill
+#define CNC_ENABLE_PIN 14 // Pin to enable mill
 #define CNC_ENABLE_WITH 1 // Set 0 if low enables spindle
 #define CNC_DIRECTION_PIN -1 // Set to pin if direction control is possible
 #define CNC_DIRECTION_CW 1 // Set signal required for clockwise rotation
@@ -801,9 +801,9 @@ on this endstop.
 #define MIN_HARDWARE_ENDSTOP_X false
 #define MIN_HARDWARE_ENDSTOP_Y false
 #define MIN_HARDWARE_ENDSTOP_Z false
-#define MAX_HARDWARE_ENDSTOP_X true
-#define MAX_HARDWARE_ENDSTOP_Y true
-#define MAX_HARDWARE_ENDSTOP_Z true
+#define MAX_HARDWARE_ENDSTOP_X false
+#define MAX_HARDWARE_ENDSTOP_Y false
+#define MAX_HARDWARE_ENDSTOP_Z false
 
 //If your axes are only moving in one direction, make sure the endstops are connected properly.
 //If your axes move in one direction ONLY when the endstops are triggered, set ENDSTOPS_INVERTING to true here
@@ -1273,7 +1273,7 @@ matches, the stored values are used to overwrite the settings.
 IMPORTANT: With mode <>0 some changes in Configuration.h are not set any more, as they are
            taken from the EEPROM.
 */
-#define EEPROM_MODE 1
+#define EEPROM_MODE 0
 
 
 /**************** duplicate motor driver ***************
@@ -1569,7 +1569,6 @@ goes on as soon as moves occur. Mainly to prevent overheating of stepper drivers
 #define FAN_THERMO_THERMISTOR_PIN -1
 #define FAN_THERMO_THERMISTOR_TYPE 1
 
-
 /** Adds support for ESP8266 Duet web interface, PanelDue and probably some other things. 
  * This essentially adds command M36/M408 and extends M20.
  * Since it requires some memory do not enable it unless you have such a display!
@@ -1607,7 +1606,7 @@ The following settings override uiconfig.h!
 24 or CONTROLLER_ZONESTAR = Zonestar P802M with LCD 20x4 and 5 ADC button keypad
 405 or CONTROLLER_FELIX_DUE Felix LCD für due based board
 */
-#define FEATURE_CONTROLLER CONTROLLER_RADDS
+#define FEATURE_CONTROLLER NO_CONTROLLER
 
 /* You can have one keypad connected via single analog pin as seen on
  some printers with Melzi V2.0 board, 20x4 LCD and 5 buttons keypad. This must be
@@ -1619,17 +1618,17 @@ Select the languages to use. On first startup user can select
 the language from a menu with activated languages. In Configuration->Language
 the language can be switched any time. */
 #define LANGUAGE_EN_ACTIVE 1 // English
-#define LANGUAGE_DE_ACTIVE 1 // German
-#define LANGUAGE_NL_ACTIVE 1 // Dutch
-#define LANGUAGE_PT_ACTIVE 1 // Brazilian Portuguese
-#define LANGUAGE_IT_ACTIVE 1 // Italian
-#define LANGUAGE_ES_ACTIVE 1 // Spanish
-#define LANGUAGE_FI_ACTIVE 1 // Finnish
-#define LANGUAGE_SE_ACTIVE 1 // Swedish
-#define LANGUAGE_FR_ACTIVE 1 // French
-#define LANGUAGE_CZ_ACTIVE 1 // Czech
-#define LANGUAGE_PL_ACTIVE 1 // Polish
-#define LANGUAGE_TR_ACTIVE 1 // Turkish
+#define LANGUAGE_DE_ACTIVE 0 // German
+#define LANGUAGE_NL_ACTIVE 0 // Dutch
+#define LANGUAGE_PT_ACTIVE 0 // Brazilian Portuguese
+#define LANGUAGE_IT_ACTIVE 0 // Italian
+#define LANGUAGE_ES_ACTIVE 0 // Spanish
+#define LANGUAGE_FI_ACTIVE 0 // Finnish
+#define LANGUAGE_SE_ACTIVE 0 // Swedish
+#define LANGUAGE_FR_ACTIVE 0 // French
+#define LANGUAGE_CZ_ACTIVE 0 // Czech
+#define LANGUAGE_PL_ACTIVE 0 // Polish
+#define LANGUAGE_TR_ACTIVE 0 // Turkish
 
 /* Some displays loose their settings from time to time. Try uncommenting the 
 auto-repair function if this is the case. It is not supported for all display
